@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bounce Modal Example</title>
+  <script src="../dist/bounce.js"></script>
+  <style>
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale3d(.3, .3, .3);
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+    @keyframes fadein {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    #modal {
+      display: none;
+      font-family: 'Open Sans', sans-serif;
+      height: 100%;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+    }
+
+    #modal .overlay {
+      animation: fadein 0.5s;
+      background-color: rgba(0, 0, 0, .5);
+      cursor: pointer;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+
+    #modal .modal {
+      animation: zoomIn 0.3s;
+      background-color: #f0f1f2;
+      border-radius: 4px;
+      bottom: 0;
+      height: 400px;
+      left: 0;
+      margin: auto;
+      padding: 20px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 600px;
+      z-index: 1;
+    }
+
+    #modal .modal-title {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div id="modal" data-bounce>
+  <div class="overlay"></div>
+  <div class="modal">
+    <div class="modal-title">
+      <h3>Modal's Title</h3>
+    </div>
+
+    <div class="modal-body">
+      Modal's body
+    </div>
+  </div>
+</div>
+<script>
+  document.cookie = 'bounce' +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+</script>
+</body>
+</html>

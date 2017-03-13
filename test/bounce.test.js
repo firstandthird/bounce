@@ -1,0 +1,99 @@
+import Bounce from '../index';
+import CookieMonster from '@firstandthird/cookie-monster';
+import test from 'tape-rollup';
+
+const cookieName = 'bounce';
+let bounceModal;
+let modalEl;
+
+const init = () => {
+  const container = document.createElement('div');
+  container.id = 'fixture';
+  document.body.appendChild(container);
+};
+
+const setup = () => {
+  const container = document.getElementById('fixture');
+  container.innerHTML = `
+    <div id="modal" data-bounce style="display: none"></div>
+  `;
+
+  modalEl = document.getElementById('modal');
+  bounceModal = new Bounce();
+};
+
+const teardown = () => {
+  bounceModal.unbindEvents();
+  CookieMonster.remove(cookieName);
+};
+
+init();
+
+test('Bounce exists', assert => {
+  assert.equal(typeof Bounce, 'function', 'class exists');
+  assert.equal(Bounce.autoRun, true, 'autorun is true');
+  assert.end();
+});
+
+test('Shows element', assert => {
+  setup();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  bounceModal.fire();
+  assert.equal(modalEl.style.display, 'block', 'element is shown after firing');
+  assert.end();
+  teardown();
+});
+
+test('Doesn\'t get shown twice', assert => {
+  setup();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  bounceModal.fire();
+  assert.equal(modalEl.style.display, 'block', 'element is shown after firing');
+  assert.end();
+  teardown();
+});
+
+test('Mouseleave', assert => {
+  setup();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  bounceModal.mouseLeave({ clientY: 41 });
+  assert.equal(bounceModal.delayTimer, null, 'doesn\'t fire if scroll is not small enough');
+  bounceModal.mouseLeave({ clientY: 39 });
+  assert.notEqual(bounceModal.delayTimer, null, 'fire if scroll is small enough');
+  bounceModal.mouseEnter();
+  assert.equal(bounceModal.delayTimer, null, 'will clear timeout if mouse enters again before 0 seconds');
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  bounceModal.mouseLeave({ clientY: 39 });
+
+  setTimeout(() => {
+    assert.equal(modalEl.style.display, 'block', 'element is shown');
+    assert.end();
+    teardown();
+  }, 2);
+});
+
+test('Keydown', assert => {
+  setup();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  bounceModal.keyDown({ metaKey: false, keyCode: 76 });
+  assert.equal(bounceModal.delayTimer, null, 'doesn\'t combination isn\'t metakey + L');
+  bounceModal.keyDown({ metaKey: true, keyCode: 78 });
+  assert.equal(bounceModal.delayTimer, null, 'doesn\'t combination isn\'t metakey + L');
+  bounceModal.keyDown({ metaKey: true, keyCode: 76 });
+  assert.notEqual(bounceModal.delayTimer, null, 'fire if combination is correct');
+
+  setTimeout(() => {
+    assert.equal(modalEl.style.display, 'block', 'element is shown');
+    assert.end();
+    teardown();
+  }, 2);
+});
+
+test('Creates cookie', assert => {
+  setup();
+  assert.equal(CookieMonster.get(cookieName), null, 'cookie doesn\'t exist');
+  bounceModal.fire();
+  assert.equal(CookieMonster.get(cookieName), 'true', 'cookie does exist after firing');
+  assert.end();
+  teardown();
+});
