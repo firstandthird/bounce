@@ -15,7 +15,9 @@ const init = () => {
 const setup = () => {
   const container = document.getElementById('fixture');
   container.innerHTML = `
-    <div id="modal" data-bounce style="display: none"></div>
+    <div id="modal" data-bounce style="display: none">
+      <div id="closer" data-bounce-close></div>
+    </div>
   `;
 
   modalEl = document.getElementById('modal');
@@ -43,6 +45,19 @@ test('Shows element', assert => {
   assert.end();
   teardown();
 });
+
+test('Hides element', assert => {
+  setup();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  bounceModal.fire();
+  assert.equal(modalEl.style.display, 'block', 'element is shown after firing');
+  const closeButton = document.getElementById('closer');
+  closeButton.click();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden after clicking');
+  assert.end();
+  teardown();
+});
+
 
 test('Doesn\'t get shown twice', assert => {
   setup();

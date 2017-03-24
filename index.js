@@ -1,6 +1,6 @@
 /* eslint-env browser */
 import CookieMonster from '@firstandthird/cookie-monster';
-import { show, on, off, find } from 'domassist';
+import { show, hide, on, once, off, find } from 'domassist';
 import aug from 'aug';
 
 const cookieName = 'bounce';
@@ -21,6 +21,7 @@ class BounceModal {
     this.handleMouseEnter = this.mouseEnter.bind(this);
     this.handleKeyDown = this.keyDown.bind(this);
     this.elements = find('[data-bounce]');
+    this.closers = find('[data-bounce-close]');
     this.delayTimer = null;
 
     if (this.elements.length) {
@@ -32,12 +33,17 @@ class BounceModal {
     on(document.documentElement, 'mouseleave', this.handleMouseLeave);
     on(document.documentElement, 'mouseenter', this.handleMouseEnter);
     on(document.documentElement, 'keydown', this.handleKeyDown);
+    once(this.closers, 'click', this.hide.bind(this));
   }
 
   unbindEvents() {
     off(document.documentElement, 'mouseleave', this.handleMouseLeave);
     off(document.documentElement, 'mouseenter', this.handleMouseEnter);
     off(document.documentElement, 'keydown', this.handleKeyDown);
+  }
+
+  hide() {
+    hide(this.elements);
   }
 
   fire() {
