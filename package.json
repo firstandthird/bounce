@@ -56,6 +56,6 @@
   "dependencies": {
     "@firstandthird/cookie-monster": "^2.0.0",
     "aug": "^1.0.2",
-    "domassist": "^1.7.2"
+    "domassist": "1.8.0"
   }
 }

@@ -1,6 +1,7 @@
 import Bounce from '../index';
 import CookieMonster from '@firstandthird/cookie-monster';
 import test from 'tape-rollup';
+import { fire } from 'domassist';
 
 const cookieName = 'bounce';
 let bounceModal;
@@ -46,6 +47,40 @@ test('Shows element', assert => {
   teardown();
 });
 
+test('Pause event', assert => {
+  setup();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  fire(document.documentElement, 'bounce:pause');
+  bounceModal.fire();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden after firing');
+  assert.end();
+  teardown();
+});
+
+test('Resume event', assert => {
+  setup();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  fire(document.documentElement, 'bounce:pause');
+  bounceModal.fire();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden after firing');
+  fire(document.documentElement, 'bounce:resume');
+  bounceModal.fire();
+  assert.equal(modalEl.style.display, 'block', 'element is shown resuming and firing again');
+  assert.end();
+  teardown();
+});
+
+test('Hides with Escape', assert => {
+  setup();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  bounceModal.fire();
+  assert.equal(modalEl.style.display, 'block', 'element is shown after firing');
+  bounceModal.handleKeyDown({ keyCode: 27 });
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  assert.end();
+  teardown();
+});
+
 test('Hides element', assert => {
   setup();
   assert.equal(modalEl.style.display, 'none', 'element is hidden');
@@ -71,20 +106,20 @@ test('Doesn\'t get shown twice', assert => {
 test('Mouseleave', assert => {
   setup();
   assert.equal(modalEl.style.display, 'none', 'element is hidden');
-  bounceModal.mouseLeave({ clientY: 41 });
+  bounceModal.mouseLeave({ clientY: 21 });
   assert.equal(bounceModal.delayTimer, null, 'doesn\'t fire if scroll is not small enough');
-  bounceModal.mouseLeave({ clientY: 39 });
+  bounceModal.mouseLeave({ clientY: 19 });
   assert.notEqual(bounceModal.delayTimer, null, 'fire if scroll is small enough');
   bounceModal.mouseEnter();
   assert.equal(bounceModal.delayTimer, null, 'will clear timeout if mouse enters again before 0 seconds');
   assert.equal(modalEl.style.display, 'none', 'element is hidden');
-  bounceModal.mouseLeave({ clientY: 39 });
+  bounceModal.mouseLeave({ clientY: 19 });
 
   setTimeout(() => {
     assert.equal(modalEl.style.display, 'block', 'element is shown');
     assert.end();
     teardown();
-  }, 2);
+  }, 251);
 });
 
 test('Keydown', assert => {
@@ -101,7 +136,7 @@ test('Keydown', assert => {
     assert.equal(modalEl.style.display, 'block', 'element is shown');
     assert.end();
     teardown();
-  }, 2);
+  }, 251);
 });
 
 test('Creates cookie', assert => {
