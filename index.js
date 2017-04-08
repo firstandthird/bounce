@@ -24,6 +24,7 @@ class BounceModal {
     this.handleResume = this.onResume.bind(this);
     this.elements = find('[data-bounce]');
     this.closers = find('[data-bounce-close]');
+    this.openers = find('[data-bounce-open]');
     this.delayTimer = null;
     this.paused = false;
 
@@ -38,6 +39,10 @@ class BounceModal {
     on(document.documentElement, 'keydown', this.handleKeyDown);
     on(document.documentElement, 'bounce:pause', this.handlePause);
     on(document.documentElement, 'bounce:resume', this.handleResume);
+    on(this.openers, 'click', e => {
+      e.preventDefault();
+      this.fire();
+    });
     once(this.closers, 'click', this.hide.bind(this));
   }
 

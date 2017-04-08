@@ -16,6 +16,7 @@ const init = () => {
 const setup = () => {
   const container = document.getElementById('fixture');
   container.innerHTML = `
+    <div id="opener" data-bounce-open></div>
     <div id="modal" data-bounce style="display: none">
       <div id="closer" data-bounce-close></div>
     </div>
@@ -42,6 +43,16 @@ test('Shows element', assert => {
   setup();
   assert.equal(modalEl.style.display, 'none', 'element is hidden');
   bounceModal.fire();
+  assert.equal(modalEl.style.display, 'block', 'element is shown after firing');
+  assert.end();
+  teardown();
+});
+
+test('Shows element with data-bounce-open', assert => {
+  setup();
+  const opener = document.getElementById('opener');
+  assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  opener.click();
   assert.equal(modalEl.style.display, 'block', 'element is shown after firing');
   assert.end();
   teardown();
