@@ -35,7 +35,7 @@ class BounceModal {
   }
 
   bindEvents() {
-    if (!BounceModal.isDisabled() ) {
+    if (!BounceModal.isDisabled()) {
       on(document.documentElement, 'mouseleave', this.handleMouseLeave);
       on(document.documentElement, 'mouseenter', this.handleMouseEnter);
     }
