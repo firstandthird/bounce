@@ -35,8 +35,11 @@ class BounceModal {
   }
 
   bindEvents() {
-    on(document.documentElement, 'mouseleave', this.handleMouseLeave);
-    on(document.documentElement, 'mouseenter', this.handleMouseEnter);
+    if (!BounceModal.isDisabled() ) {
+      on(document.documentElement, 'mouseleave', this.handleMouseLeave);
+      on(document.documentElement, 'mouseenter', this.handleMouseEnter);
+    }
+
     on(document.documentElement, 'keydown', this.handleKeyDown);
     on(document.documentElement, 'bounce:pause', this.handlePause);
     on(document.documentElement, 'bounce:resume', this.handleResume);
@@ -105,7 +108,7 @@ class BounceModal {
       return;
     }
 
-    if (!event.metaKey || event.keyCode !== 76) {
+    if (!event.metaKey || event.keyCode !== 76 || BounceModal.isDisabled()) {
       return;
     }
 
