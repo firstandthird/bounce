@@ -9,7 +9,9 @@ const cookieExpires = 30;
 
 class BounceModal {
   constructor(options = {}) {
-    if (BounceModal.isDisabled()) {
+    this.openers = find('[data-bounce-open]');
+
+    if (BounceModal.isDisabled() && !this.openers.length) {
       return;
     }
 
@@ -24,7 +26,6 @@ class BounceModal {
     this.handleResume = this.onResume.bind(this);
     this.elements = find('[data-bounce]');
     this.closers = find('[data-bounce-close]');
-    this.openers = find('[data-bounce-open]');
     this.delayTimer = null;
     this.paused = false;
 
@@ -62,7 +63,10 @@ class BounceModal {
   }
 
   hide() {
-    off(document.documentElement, 'keydown', this.handleKeyDown);
+    if (!this.openers.length) {
+      off(document.documentElement, 'keydown', this.handleKeyDown);
+    }
+
     hide(this.elements);
   }
 
