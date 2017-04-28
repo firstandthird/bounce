@@ -54,8 +54,8 @@ class BounceModal {
   }
 
   unbindEvents() {
-    off(document.documentElement, 'mouseleave', this.handleMouseLeave);
-    off(document.documentElement, 'mouseenter', this.handleMouseEnter);
+    document.documentElement.removeEventListener('mouseleave', this.handleMouseLeave);
+    document.documentElement.removeEventListener('mouseenter', this.handleMouseEnter);
     off(document.documentElement, 'bounce:pause', this.handlePause);
     off(document.documentElement, 'bounce:resume', this.handleResume);
   }
