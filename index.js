@@ -1,8 +1,11 @@
 /* eslint-env browser */
 import CookieMonster from '@firstandthird/cookie-monster';
-import { show, hide, on, once, off, find } from 'domassist';
+import { show, hide, on, once, off, find, addClass, removeClass } from 'domassist';
 import aug from 'aug';
 
+const CLASSES = {
+  OPEN: 'bounce-is-open'
+};
 const cookieName = 'bounce';
 const cookieValue = true;
 const cookieExpires = 30;
@@ -70,6 +73,7 @@ class BounceModal {
       off(document.documentElement, 'keydown', this.handleKeyDown);
     }
 
+    removeClass(document.documentElement, CLASSES.OPEN);
     hide(this.elements);
   }
 
@@ -79,6 +83,7 @@ class BounceModal {
     }
 
     this.disable();
+    addClass(document.documentElement, CLASSES.OPEN);
     show(this.elements);
   }
 

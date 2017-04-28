@@ -3,6 +3,7 @@ import CookieMonster from '@firstandthird/cookie-monster';
 import test from 'tape-rollup';
 import { fire } from 'domassist';
 
+const className = 'bounce-is-open';
 const cookieName = 'bounce';
 let bounceModal;
 let modalEl;
@@ -28,6 +29,7 @@ const setup = () => {
 
 const teardown = () => {
   bounceModal.unbindEvents();
+  document.documentElement.classList.remove(className);
   CookieMonster.remove(cookieName);
 };
 
@@ -42,8 +44,10 @@ test('Bounce exists', assert => {
 test('Shows element', assert => {
   setup();
   assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  assert.notOk(document.documentElement.classList.contains(className), 'document doesn\'t have open class');
   bounceModal.fire();
   assert.equal(modalEl.style.display, 'block', 'element is shown after firing');
+  assert.ok(document.documentElement.classList.contains(className), 'document has open class');
   assert.end();
   teardown();
 });
@@ -95,11 +99,14 @@ test('Hides with Escape', assert => {
 test('Hides element', assert => {
   setup();
   assert.equal(modalEl.style.display, 'none', 'element is hidden');
+  assert.notOk(document.documentElement.classList.contains(className), 'document doesn\'t have open class');
   bounceModal.fire();
   assert.equal(modalEl.style.display, 'block', 'element is shown after firing');
+  assert.ok(document.documentElement.classList.contains(className), 'document doesn\'t have open class');
   const closeButton = document.getElementById('closer');
   closeButton.click();
   assert.equal(modalEl.style.display, 'none', 'element is hidden after clicking');
+  assert.notOk(document.documentElement.classList.contains(className), 'document doesn\'t have open class');
   assert.end();
   teardown();
 });
