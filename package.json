@@ -1,6 +1,6 @@
 {
   "name": "@firstandthird/bounce",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Show elements on mouse out to increase conversion rates",
   "main": "dist/bounce.js",
   "module": "index.js",
