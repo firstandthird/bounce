@@ -52,6 +52,20 @@ test('Shows element', assert => {
   teardown();
 });
 
+test('Fired events', assert => {
+  setup();
+  assert.plan(2);
+  const eventHandler = () => { assert.pass('Event fired'); };
+  document.documentElement.addEventListener('bounce:show', eventHandler);
+  document.documentElement.addEventListener('bounce:hide', eventHandler);
+  bounceModal.fire();
+  bounceModal.hide();
+  document.documentElement.removeEventListener('bounce:show', eventHandler);
+  document.documentElement.removeEventListener('bounce:hide', eventHandler);
+  assert.end();
+  teardown();
+});
+
 test('Shows element with data-bounce-open', assert => {
   setup();
   const opener = document.getElementById('opener');
