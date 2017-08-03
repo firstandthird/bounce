@@ -179,3 +179,13 @@ test('Creates cookie', assert => {
   assert.end();
   teardown();
 });
+
+test('Possible to set up another cookie', assert => {
+  bounceModal = new Bounce({ cookieName: 'foo' });
+
+  assert.equal(CookieMonster.get('foo'), null, 'cookie doesn\'t exist');
+  bounceModal.fire();
+  assert.equal(CookieMonster.get('foo'), 'true', 'cookie does exist after firing');
+  assert.end();
+  teardown();
+});

@@ -14,14 +14,16 @@ class BounceModal {
   constructor(options = {}) {
     this.openers = find('[data-bounce-open]');
 
-    if (BounceModal.isDisabled() && !this.openers.length) {
+    this.options = aug({}, {
+      minOffset: 20,
+      delay: 250,
+      cookieName
+    }, options);
+
+    if (this.isDisabled() && !this.openers.length) {
       return;
     }
 
-    this.options = aug({}, {
-      minOffset: 20,
-      delay: 250
-    }, options);
     this.handleMouseLeave = this.mouseLeave.bind(this);
     this.handleMouseEnter = this.mouseEnter.bind(this);
     this.handleKeyDown = this.keyDown.bind(this);
@@ -38,7 +40,7 @@ class BounceModal {
   }
 
   bindEvents() {
-    if (!BounceModal.isDisabled()) {
+    if (!this.isDisabled()) {
       on(document.documentElement, 'mouseleave', this.handleMouseLeave);
       on(document.documentElement, 'mouseenter', this.handleMouseEnter);
     }
@@ -91,7 +93,7 @@ class BounceModal {
 
   disable() {
     this.unbindEvents();
-    CookieMonster.set(cookieName, cookieValue, cookieExpires);
+    CookieMonster.set(this.options.cookieName, cookieValue, cookieExpires);
   }
 
   mouseLeave(event) {
@@ -115,15 +117,15 @@ class BounceModal {
       return;
     }
 
-    if (!event.metaKey || event.keyCode !== 76 || BounceModal.isDisabled()) {
+    if (!event.metaKey || event.keyCode !== 76 || this.isDisabled()) {
       return;
     }
 
     this.delayTimer = setTimeout(this.fire.bind(this), this.options.delay);
   }
 
-  static isDisabled() {
-    return !!CookieMonster.get(cookieName);
+  isDisabled() {
+    return !!CookieMonster.get(this.options.cookieName);
   }
 }
 
