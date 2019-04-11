@@ -2,8 +2,8 @@
   "name": "@firstandthird/bounce",
   "version": "1.6.0",
   "description": "Show elements on mouse out to increase conversion rates",
-  "main": "dist/bounce.js",
-  "module": "index.js",
+  "main": "index.js",
+  "module": "dist/bounce.esm.js",
   "keywords": [
     "bounce",
     "conversion"
@@ -12,8 +12,9 @@
     "start": "scriptkit",
     "build": "scriptkit build",
     "dev": "scriptkit dev",
+    "pretest": "scriptkit build",
     "test": "cat test/bounce.test.dist.js | tape-run --static . --browser phantomjs --render tap-spec",
-    "prepublish": "scriptkit"
+    "prepublishOnly": "scriptkit"
   },
   "repository": {
     "type": "git",
@@ -26,13 +27,13 @@
   },
   "homepage": "https://github.com/firstandthird/bounce#readme",
   "devDependencies": {
-    "eslint-config-firstandthird": "3.2.0",
-    "eslint-plugin-import": "2.2.0",
-    "phantomjs-prebuilt": "2.1.14",
-    "scriptkit": "0.2.0",
-    "tap-spec": "4.1.1",
+    "eslint-config-firstandthird": "4.3.0",
+    "eslint-plugin-import": "2.16.0",
+    "phantomjs-prebuilt": "2.1.16",
+    "scriptkit": "2.0.3",
+    "tap-spec": "5.0.0",
     "tape-rollup": "4.6.4",
-    "tape-run": "3.0.0"
+    "tape-run": "5.0.0"
   },
   "eslintConfig": {
     "env": {
@@ -41,6 +42,9 @@
     "extends": "firstandthird"
   },
   "scriptkit": {
+    "serve": {
+      "enabled": true
+    },
     "files": {
       "dist/bounce.js": "index.js",
       "test/bounce.test.dist.js": "test/bounce.test.js"
@@ -55,7 +59,7 @@
   },
   "dependencies": {
     "@firstandthird/cookie-monster": "^2.0.0",
-    "aug": "^1.0.2",
-    "domassist": "^1.8.0"
+    "aug": "^3.0.1",
+    "domassist": "^2.0.2"
   }
 }
