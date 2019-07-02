@@ -1,6 +1,4 @@
-# Bounce
-
-![npm](https://img.shields.io/npm/v/@firstandthird/bounce.svg)
+# Bounce ![npm](https://img.shields.io/npm/v/@firstandthird/bounce.svg)
 
 Simple module to show elements if it appears that user is leaving the page.
 
