@@ -6,6 +6,12 @@ import aug from 'aug';
 const CLASSES = {
   OPEN: 'bounce-is-open'
 };
+const EVENTS = {
+  SHOW: 'bounce:show',
+  HIDE: 'bounce:hide',
+  PAUSE: 'bounce:pause',
+  RESUME: 'bounce:resume',
+};
 const cookieName = 'bounce';
 const cookieValue = true;
 const cookieExpires = 30;
@@ -46,10 +52,10 @@ class BounceModal {
     }
 
     on(document.documentElement, 'keydown', this.handleKeyDown);
-    on(document.documentElement, 'bounce:pause', this.handlePause);
-    on(document.documentElement, 'bounce:resume', this.handleResume);
-    on(this.openers, 'click', e => {
-      e.preventDefault();
+    on(document.documentElement, EVENTS.PAUSE, this.handlePause);
+    on(document.documentElement, EVENTS.RESUME, this.handleResume);
+    on(this.openers, 'click', event => {
+      event.preventDefault();
       this.fire();
     });
     once(this.closers, 'click', this.hide.bind(this));
@@ -58,8 +64,8 @@ class BounceModal {
   unbindEvents() {
     document.documentElement.removeEventListener('mouseleave', this.handleMouseLeave);
     document.documentElement.removeEventListener('mouseenter', this.handleMouseEnter);
-    off(document.documentElement, 'bounce:pause', this.handlePause);
-    off(document.documentElement, 'bounce:resume', this.handleResume);
+    off(document.documentElement, EVENTS.PAUSE, this.handlePause);
+    off(document.documentElement, EVENTS.RESUME, this.handleResume);
   }
 
   onPause() {
@@ -75,7 +81,7 @@ class BounceModal {
       off(document.documentElement, 'keydown', this.handleKeyDown);
     }
 
-    fire(document.documentElement, 'bounce:hide');
+    fire(document.documentElement, EVENTS.HIDE);
     removeClass(document.documentElement, CLASSES.OPEN);
     hide(this.elements);
   }
@@ -86,7 +92,7 @@ class BounceModal {
     }
 
     this.disable();
-    fire(document.documentElement, 'bounce:show');
+    fire(document.documentElement, EVENTS.SHOW);
     addClass(document.documentElement, CLASSES.OPEN);
     show(this.elements);
   }
