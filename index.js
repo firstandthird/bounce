@@ -7,6 +7,7 @@ const CLASSES = {
   OPEN: 'bounce-is-open'
 };
 const EVENTS = {
+  OPEN: 'bounce:open',
   SHOW: 'bounce:show',
   HIDE: 'bounce:hide',
   PAUSE: 'bounce:pause',
@@ -54,6 +55,7 @@ class BounceModal {
     on(document.documentElement, 'keydown', this.handleKeyDown);
     on(document.documentElement, EVENTS.PAUSE, this.handlePause);
     on(document.documentElement, EVENTS.RESUME, this.handleResume);
+    on(document.documentElement, EVENTS.OPEN, this.fire.bind(this));
     on(this.openers, 'click', event => {
       event.preventDefault();
       this.fire();
