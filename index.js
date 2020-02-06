@@ -1,6 +1,6 @@
 /* eslint-env browser */
 import CookieMonster from '@firstandthird/cookie-monster';
-import { show, hide, on, once, off, find, addClass, removeClass, fire } from 'domassist';
+import { show, hide, on, once, off, find, addClass, removeClass, fire, matches } from 'domassist';
 import aug from 'aug';
 
 const CLASSES = {
@@ -36,10 +36,12 @@ class BounceModal {
     this.handleKeyDown = this.keyDown.bind(this);
     this.handlePause = this.onPause.bind(this);
     this.handleResume = this.onResume.bind(this);
+    this.handleHash = this.onHashChange.bind(this);
     this.elements = find('[data-bounce]');
     this.closers = find('[data-bounce-close]');
     this.delayTimer = null;
     this.paused = false;
+    this.hashedElements = this.elements.filter(element => matches(element, '[data-bounce-enable-hash]'));
 
     if (this.elements.length) {
       this.bindEvents();
@@ -50,6 +52,11 @@ class BounceModal {
     if (!this.isDisabled()) {
       on(document.documentElement, 'mouseleave', this.handleMouseLeave);
       on(document.documentElement, 'mouseenter', this.handleMouseEnter);
+    }
+
+    if (this.hashedElements.length) {
+      this.onHashChange();
+      on(window, 'hashchange', this.handleHash.bind(this));
     }
 
     on(document.documentElement, 'keydown', this.handleKeyDown);
@@ -68,6 +75,24 @@ class BounceModal {
     document.documentElement.removeEventListener('mouseenter', this.handleMouseEnter);
     off(document.documentElement, EVENTS.PAUSE, this.handlePause);
     off(document.documentElement, EVENTS.RESUME, this.handleResume);
+  }
+
+  onHashChange() {
+    if (this.paused) {
+      return;
+    }
+
+    const hash = location.hash.slice(1);
+    const hashItems = this.hashedElements.filter(element => element.id === hash);
+
+    if (!hashItems.length) {
+      return;
+    }
+
+    this.disable();
+    fire(document.documentElement, EVENTS.SHOW);
+    addClass(document.documentElement, CLASSES.OPEN);
+    show(hashItems);
   }
 
   onPause() {
