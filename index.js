@@ -1,10 +1,17 @@
 /* eslint-env browser */
 import CookieMonster from '@firstandthird/cookie-monster';
-import { show, hide, on, once, off, find, addClass, removeClass, fire } from 'domassist';
+import { show, hide, on, once, off, find, addClass, removeClass, fire, matches } from 'domassist';
 import aug from 'aug';
 
 const CLASSES = {
   OPEN: 'bounce-is-open'
+};
+const EVENTS = {
+  OPEN: 'bounce:open',
+  SHOW: 'bounce:show',
+  HIDE: 'bounce:hide',
+  PAUSE: 'bounce:pause',
+  RESUME: 'bounce:resume',
 };
 const cookieName = 'bounce';
 const cookieValue = true;
@@ -29,10 +36,12 @@ class BounceModal {
     this.handleKeyDown = this.keyDown.bind(this);
     this.handlePause = this.onPause.bind(this);
     this.handleResume = this.onResume.bind(this);
+    this.handleHash = this.onHashChange.bind(this);
     this.elements = find('[data-bounce]');
     this.closers = find('[data-bounce-close]');
     this.delayTimer = null;
     this.paused = false;
+    this.hashedElements = this.elements.filter(element => matches(element, '[data-bounce-enable-hash]'));
 
     if (this.elements.length) {
       this.bindEvents();
@@ -45,11 +54,17 @@ class BounceModal {
       on(document.documentElement, 'mouseenter', this.handleMouseEnter);
     }
 
+    if (this.hashedElements.length) {
+      this.onHashChange();
+      on(window, 'hashchange', this.handleHash.bind(this));
+    }
+
     on(document.documentElement, 'keydown', this.handleKeyDown);
-    on(document.documentElement, 'bounce:pause', this.handlePause);
-    on(document.documentElement, 'bounce:resume', this.handleResume);
-    on(this.openers, 'click', e => {
-      e.preventDefault();
+    on(document.documentElement, EVENTS.PAUSE, this.handlePause);
+    on(document.documentElement, EVENTS.RESUME, this.handleResume);
+    on(document.documentElement, EVENTS.OPEN, this.fire.bind(this));
+    on(this.openers, 'click', event => {
+      event.preventDefault();
       this.fire();
     });
     once(this.closers, 'click', this.hide.bind(this));
@@ -58,8 +73,26 @@ class BounceModal {
   unbindEvents() {
     document.documentElement.removeEventListener('mouseleave', this.handleMouseLeave);
     document.documentElement.removeEventListener('mouseenter', this.handleMouseEnter);
-    off(document.documentElement, 'bounce:pause', this.handlePause);
-    off(document.documentElement, 'bounce:resume', this.handleResume);
+    off(document.documentElement, EVENTS.PAUSE, this.handlePause);
+    off(document.documentElement, EVENTS.RESUME, this.handleResume);
+  }
+
+  onHashChange() {
+    if (this.paused) {
+      return;
+    }
+
+    const hash = location.hash.slice(1);
+    const hashItems = this.hashedElements.filter(element => element.id === hash);
+
+    if (!hashItems.length) {
+      return;
+    }
+
+    this.disable();
+    fire(document.documentElement, EVENTS.SHOW);
+    addClass(document.documentElement, CLASSES.OPEN);
+    show(hashItems);
   }
 
   onPause() {
@@ -75,7 +108,7 @@ class BounceModal {
       off(document.documentElement, 'keydown', this.handleKeyDown);
     }
 
-    fire(document.documentElement, 'bounce:hide');
+    fire(document.documentElement, EVENTS.HIDE);
     removeClass(document.documentElement, CLASSES.OPEN);
     hide(this.elements);
   }
@@ -86,7 +119,7 @@ class BounceModal {
     }
 
     this.disable();
-    fire(document.documentElement, 'bounce:show');
+    fire(document.documentElement, EVENTS.SHOW);
     addClass(document.documentElement, CLASSES.OPEN);
     show(this.elements);
   }

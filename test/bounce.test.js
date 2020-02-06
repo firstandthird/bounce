@@ -135,6 +135,18 @@ test('Doesn\'t get shown twice', assert => {
   teardown();
 });
 
+test('Open modal via event', assert => {
+  setup();
+  fire(document.documentElement, 'bounce:open');
+  assert.equal(modalEl.style.display, 'block', 'element is shown after firing open event');
+  const closeButton = document.getElementById('closer');
+  closeButton.click();
+  assert.equal(modalEl.style.display, 'none', 'element is hidden after clicking');
+  assert.notOk(document.documentElement.classList.contains(className), 'document doesn\'t have open class');
+  assert.end();
+  teardown();
+});
+
 test('Mouseleave', assert => {
   setup();
   assert.equal(modalEl.style.display, 'none', 'element is hidden');
