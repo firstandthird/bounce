@@ -27,7 +27,10 @@ class BounceModal {
       cookieName
     }, options);
 
-    if (this.isDisabled() && !this.openers.length) {
+    this.elements = find('[data-bounce]');
+    this.hashedElements = this.elements.filter(element => matches(element, '[data-bounce-enable-hash]'));
+
+    if (!this.hashedElements.length && this.isDisabled() && !this.openers.length) {
       return;
     }
 
@@ -37,11 +40,9 @@ class BounceModal {
     this.handlePause = this.onPause.bind(this);
     this.handleResume = this.onResume.bind(this);
     this.handleHash = this.onHashChange.bind(this);
-    this.elements = find('[data-bounce]');
     this.closers = find('[data-bounce-close]');
     this.delayTimer = null;
     this.paused = false;
-    this.hashedElements = this.elements.filter(element => matches(element, '[data-bounce-enable-hash]'));
 
     if (this.elements.length) {
       this.bindEvents();
