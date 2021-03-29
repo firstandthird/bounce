@@ -68,7 +68,7 @@ class BounceModal {
       event.preventDefault();
       this.fire();
     });
-    once(this.closers, 'click', this.hide.bind(this));
+    on(this.closers, 'click', this.hide.bind(this));
   }
 
   unbindEvents() {
