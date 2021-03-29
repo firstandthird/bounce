@@ -1,6 +1,6 @@
 /* eslint-env browser */
 import CookieMonster from '@firstandthird/cookie-monster';
-import { show, hide, on, once, off, find, addClass, removeClass, fire, matches } from 'domassist';
+import { show, hide, on, off, find, addClass, removeClass, fire, matches } from 'domassist';
 import aug from 'aug';
 
 const CLASSES = {
